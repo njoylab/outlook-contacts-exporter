@@ -2,6 +2,8 @@
 
 Extract contacts from Outlook for Mac backup files (`.olm`) and download them as CSV or vCard. Includes a CLI tool and a simple web UI.
 
+![Outlook Contacts Exporter demo](assets/demo.gif)
+
 ## Features
 - Works entirely offline (client-side for the web UI)
 - Exports CSV and vCard (`.vcf`)
