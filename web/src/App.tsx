@@ -180,6 +180,16 @@ function App() {
                   <p className="text-slate-600 mb-6">
                     or <label htmlFor="file-upload" className="text-primary-600 font-semibold cursor-pointer hover:text-primary-700 transition-colors">browse files</label>
                   </p>
+                  <p className="text-sm text-slate-500 mb-6">
+                    Having issues? Please{' '}
+                    <a
+                      href="https://github.com/njoylab/outlook-contacts-exporter/issues"
+                      className="text-primary-600 hover:text-primary-700 transition-colors"
+                    >
+                      open an issue on GitHub
+                    </a>
+                    .
+                  </p>
 
                   <div className="flex items-center gap-6 justify-center pt-6 border-t border-slate-200">
                     <label className="flex items-center gap-3 cursor-pointer group">
@@ -381,6 +391,14 @@ function App() {
         <footer className="mt-16 text-center text-sm text-slate-500">
           <p>
             Built with privacy in mind. All processing happens locally in your browser.
+          </p>
+          <p className="mt-2">
+            <a
+              href="https://github.com/njoylab/outlook-contacts-exporter"
+              className="text-primary-600 hover:text-primary-700 transition-colors"
+            >
+              https://github.com/njoylab/outlook-contacts-exporter
+            </a>
           </p>
         </footer>
       </div>
