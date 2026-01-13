@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Upload, Download, FileText, Users, Mail, Check, Info, ShieldCheck, BookOpen } from 'lucide-react';
 
 type AppState = 'idle' | 'processing' | 'complete';
@@ -13,6 +13,10 @@ interface ProcessingResult {
 }
 
 function App() {
+  const currentPath = window.location.pathname;
+  const isPrivacyPage = currentPath === '/privacy';
+  const isRootPage = currentPath === '/' || currentPath === '';
+  const isNotFoundPage = !isRootPage && !isPrivacyPage;
   const [state, setState] = useState<AppState>('idle');
   const [extractFromPreview, setExtractFromPreview] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -21,6 +25,27 @@ function App() {
   const [fileName, setFileName] = useState<string>('');
   const [obfuscateResults, setObfuscateResults] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const baseTitle = 'Outlook Contacts Exporter - OLM to CSV or vCard';
+    document.title = isPrivacyPage
+      ? `Privacy Policy - ${baseTitle}`
+      : isNotFoundPage
+        ? `Page Not Found - ${baseTitle}`
+        : baseTitle;
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      const canonicalUrl = isPrivacyPage
+        ? 'https://outlook-contacts.echovalue.dev/privacy'
+        : 'https://outlook-contacts.echovalue.dev/';
+      canonical.setAttribute('href', canonicalUrl);
+    }
+    const robots = document.querySelector('meta[name="robots"]');
+    if (robots) {
+      robots.setAttribute('content', isNotFoundPage ? 'noindex,follow' : 'index,follow');
+    }
+  }, [isPrivacyPage, isNotFoundPage]);
 
   const obfuscateName = (name: string) => {
     if (!name) return '';
@@ -141,6 +166,94 @@ function App() {
     setResult(null);
     setFileName('');
   };
+
+  if (isPrivacyPage) {
+    return (
+      <div className="min-h-screen relative overflow-hidden">
+        <div className="absolute inset-0 dot-pattern opacity-40" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200 rounded-full filter blur-[128px] opacity-30 animate-float" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
+
+        <div className="relative z-10 container mx-auto px-6 py-16 max-w-4xl">
+          <header className="text-center mb-12 animate-slide-up">
+            <div className="inline-flex items-center gap-3 mb-6">
+              <div className="p-3 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl shadow-lg shadow-primary-500/30">
+                <ShieldCheck className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-5xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
+                Privacy Policy
+              </h1>
+            </div>
+            <p className="text-lg text-slate-600">
+              We built this tool to keep your data on your device.
+            </p>
+          </header>
+
+          <section className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl space-y-6 text-slate-600">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">Local Processing Only</h2>
+              <p>
+                Your .olm file is processed entirely in your browser. No files are uploaded, stored, or transmitted to
+                any server.
+              </p>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">No Accounts or Tracking</h2>
+              <p>
+                This app does not require an account and does not use analytics or trackers.
+              </p>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">Data Exports</h2>
+              <p>
+                CSV and vCard files are generated locally and downloaded directly to your device.
+              </p>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">Contact</h2>
+              <p>
+                Questions? Open an issue on GitHub and we will respond.
+              </p>
+            </div>
+          </section>
+
+          <footer className="mt-12 text-center text-sm text-slate-500">
+            <a href="/" className="text-primary-600 hover:text-primary-700 transition-colors">
+              Back to the app
+            </a>
+          </footer>
+        </div>
+      </div>
+    );
+  }
+
+  if (isNotFoundPage) {
+    return (
+      <div className="min-h-screen relative overflow-hidden">
+        <div className="absolute inset-0 dot-pattern opacity-40" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200 rounded-full filter blur-[128px] opacity-30 animate-float" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
+
+        <div className="relative z-10 container mx-auto px-6 py-20 max-w-3xl text-center">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl shadow-lg shadow-primary-500/30 mb-6">
+            <Mail className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-5xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent mb-4">
+            Page not found
+          </h1>
+          <p className="text-lg text-slate-600 mb-8">
+            The page you are looking for doesn’t exist. Head back to the app and upload a .olm file.
+          </p>
+          <a
+            href="/"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300"
+          >
+            Back to the app
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -471,6 +584,11 @@ function App() {
               className="text-primary-600 hover:text-primary-700 transition-colors"
             >
               https://github.com/njoylab/outlook-contacts-exporter
+            </a>
+          </p>
+          <p className="mt-2">
+            <a href="/privacy" className="text-primary-600 hover:text-primary-700 transition-colors">
+              Privacy Policy
             </a>
           </p>
         </footer>
