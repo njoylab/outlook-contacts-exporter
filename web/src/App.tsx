@@ -387,6 +387,23 @@ function App() {
           </ol>
         </section>
 
+        <section className="mt-16 bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
+          <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <span className="p-2 bg-slate-100 rounded-lg">
+              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            </span>
+            Privacy & Security
+          </h3>
+          <div className="space-y-3 text-slate-600">
+            <p>
+              Your .olm file stays on your device. All parsing and exports run locally in the browser.
+            </p>
+            <p>
+              No uploads, no accounts, and no tracking. Just open the app, process, and download.
+            </p>
+          </div>
+        </section>
+
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-slate-500">
           <p>
