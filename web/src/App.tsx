@@ -18,7 +18,7 @@ function App() {
   const isRootPage = currentPath === '/' || currentPath === '';
   const isNotFoundPage = !isRootPage && !isPrivacyPage;
   const [state, setState] = useState<AppState>('idle');
-  const [extractFromPreview, setExtractFromPreview] = useState(true);
+  const [extractFromPreview, setExtractFromPreview] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ProcessingResult | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -280,7 +280,7 @@ function App() {
           </div>
 
           <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Convert Outlook for Mac backups into CSV or vCard.
+            OLM to CSV / vCard converter for Outlook for Mac.
             <span className="block">100% local, private, and runs entirely in your browser.</span>
             <span className="mt-4 text-sm text-slate-500 font-medium inline-flex items-center gap-2 justify-center">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
@@ -387,6 +387,9 @@ function App() {
                     </a>
                     .
                   </p>
+                  <p className="text-[11px] text-slate-500">
+                    Local-only: the file is processed on your device and never uploaded.
+                  </p>
 
                   <div className="flex flex-col md:flex-row items-center md:items-start gap-6 justify-center pt-6 border-t border-slate-200">
                     <div
@@ -415,7 +418,7 @@ function App() {
                           </span>
                         </label>
                         <p className="text-xs text-slate-500 mt-1">
-                          This scans sent emails to find additional recipients. It may take longer and is optional.
+                          This scans sent emails to find additional recipients. Still local-only.
                         </p>
                       </div>
                     </div>
@@ -488,7 +491,7 @@ function App() {
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                       <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-slate-700 shadow-lg">
                         <Play className="w-4 h-4 text-primary-600" />
-                        Play demo
+                        Watch a 5s demo
                       </div>
                     </div>
                   )}
