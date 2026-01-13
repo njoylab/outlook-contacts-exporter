@@ -20,6 +20,11 @@ test-output/
 .env
 .env.*
 
+# Assistant instructions
+AGENTS.md
+CLAUDE.md
+.claude/
+
 # Editors
 .vscode/
 .idea/
