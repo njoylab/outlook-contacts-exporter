@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Upload, Download, FileText, Users, Mail, Check, Info, ShieldCheck, BookOpen } from 'lucide-react';
+import { Upload, Download, FileText, Users, Mail, Check, Info, ShieldCheck, BookOpen, Play } from 'lucide-react';
 
 type AppState = 'idle' | 'processing' | 'complete';
 
@@ -24,6 +24,9 @@ function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string>('');
   const [obfuscateResults, setObfuscateResults] = useState(false);
+  const [showDemoMedia, setShowDemoMedia] = useState(true);
+  const [demoLoaded, setDemoLoaded] = useState(false);
+  const [demoPlaying, setDemoPlaying] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -266,23 +269,60 @@ function App() {
 
       <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
         {/* Header */}
-        <header className="text-center mb-16 animate-slide-up">
+        <header className="text-center mb-10 sm:mb-12 animate-slide-up">
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="p-3 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl shadow-lg shadow-primary-500/30">
               <Mail className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
-              OLM Contact Extractor
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
+              Move your Outlook contacts out of .olm in seconds
             </h1>
           </div>
 
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Extract contacts from Outlook Mac backup files (.olm) directly in your browser.
-            <span className="mt-2 text-sm text-slate-500 font-medium inline-flex items-center gap-2 justify-center">
+          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Convert Outlook for Mac backups into CSV or vCard.
+            <span className="block">100% local, private, and runs entirely in your browser.</span>
+            <span className="mt-4 text-sm text-slate-500 font-medium inline-flex items-center gap-2 justify-center">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              100% client-side processing – your data never leaves your device
+              No uploads. No tracking. Just local processing.
             </span>
           </p>
+
+          <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-sm text-slate-600">
+            {[
+              { label: 'Runs entirely in your browser' },
+              { label: 'Your file never leaves your device' },
+              { label: 'Open-source on GitHub', href: 'https://github.com/njoylab/outlook-contacts-exporter' },
+              { label: 'No accounts or tracking', className: 'hidden sm:flex' },
+              { label: 'Works offline after load', className: 'hidden sm:flex' },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className={`items-center justify-center gap-2 bg-white/70 px-3 py-2 rounded-full border border-slate-200 ${item.className ?? 'flex'}`}
+              >
+                <Check className="w-4 h-4 text-emerald-600" />
+                {item.href ? (
+                  <a
+                    href={item.href}
+                    className="hover:text-slate-900 transition-colors"
+                    rel="noreferrer"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <span>{item.label}</span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 sm:mt-6 inline-flex flex-wrap items-center justify-center gap-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="px-3 py-2 rounded-full bg-slate-100">Upload .olm</span>
+            <span className="text-slate-400">→</span>
+            <span className="px-3 py-2 rounded-full bg-slate-100">Parse locally</span>
+            <span className="text-slate-400">→</span>
+            <span className="px-3 py-2 rounded-full bg-slate-100">Download CSV / vCard</span>
+          </div>
         </header>
 
         {/* Main Content */}
@@ -290,6 +330,9 @@ function App() {
           {/* Upload Section */}
           {state === 'idle' && (
             <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <div className="text-center text-sm font-semibold uppercase tracking-wide text-primary-700 mb-4">
+                Drop your .olm file to convert
+              </div>
               <div
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -323,7 +366,7 @@ function App() {
                   </div>
 
                   <h3 className="text-2xl font-bold text-slate-900 mb-3">
-                    Drop your .olm file here
+                    Drag & drop your .olm file
                   </h3>
                   <p className="text-slate-600 mb-6">
                     or{' '}
@@ -345,41 +388,115 @@ function App() {
                     .
                   </p>
 
-                  <div className="flex items-center gap-6 justify-center pt-6 border-t border-slate-200">
-                    <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-6 justify-center pt-6 border-t border-slate-200">
+                    <div
+                      className="flex items-start gap-3 text-left max-w-sm"
+                      onClick={(event) => event.stopPropagation()}
+                    >
                       <input
+                        id="scan-sent"
                         type="checkbox"
                         checked={extractFromPreview}
                         onChange={(e) => setExtractFromPreview(e.target.checked)}
-                        onClick={(event) => event.stopPropagation()}
-                        className="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 focus:ring-offset-2 cursor-pointer"
+                        className="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 focus:ring-offset-2 cursor-pointer mt-1"
                       />
-                      <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 transition-colors">
-                        Also scan sent messages
-                      </span>
-                      <div className="group/tooltip relative">
-                        <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
-                          Find more contacts by extracting recipients from sent messages
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900" />
-                        </div>
+                      <div>
+                        <label
+                          htmlFor="scan-sent"
+                          className="text-sm font-medium text-slate-600 hover:text-slate-800 transition-colors cursor-pointer inline-flex items-center gap-2"
+                        >
+                          Also scan sent messages
+                          <span className="group/tooltip relative inline-flex">
+                            <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
+                              Find more contacts by extracting recipients from sent messages
+                              <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900" />
+                            </span>
+                          </span>
+                        </label>
+                        <p className="text-xs text-slate-500 mt-1">
+                          This scans sent emails to find additional recipients. It may take longer and is optional.
+                        </p>
                       </div>
-                    </label>
-                    <label className="flex items-center gap-3 cursor-pointer group">
+                    </div>
+
+                    <div
+                      className="flex items-start gap-3 text-left"
+                      onClick={(event) => event.stopPropagation()}
+                    >
                       <input
+                        id="obfuscate-results"
                         type="checkbox"
                         checked={obfuscateResults}
                         onChange={(e) => setObfuscateResults(e.target.checked)}
-                        onClick={(event) => event.stopPropagation()}
-                        className="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 focus:ring-offset-2 cursor-pointer"
+                        className="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 focus:ring-offset-2 cursor-pointer mt-1"
                       />
-                      <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 transition-colors">
-                        Obfuscate results in UI
-                      </span>
-                    </label>
+                      <div>
+                        <label
+                          htmlFor="obfuscate-results"
+                          className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                        >
+                          Obfuscate results in UI
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <section className="mt-10 bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                  {showDemoMedia ? (
+                    <video
+                      className="w-full h-auto object-cover"
+                      poster="/assets/demo-poster.jpg"
+                      controls
+                      muted
+                      playsInline
+                      preload="metadata"
+                      onLoadedData={() => setDemoLoaded(true)}
+                      onPlay={() => setDemoPlaying(true)}
+                      onPause={() => setDemoPlaying(false)}
+                      onEnded={() => setDemoPlaying(false)}
+                      onError={() => {
+                        setDemoLoaded(false);
+                        setShowDemoMedia(false);
+                      }}
+                    >
+                      <source src="/assets/demo.webm" type="video/webm" />
+                      <source src="/assets/demo.mp4" type="video/mp4" />
+                    </video>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-3 px-6 py-10 text-center text-slate-500">
+                      <div className="w-12 h-12 rounded-2xl bg-white shadow-md flex items-center justify-center">
+                        <Upload className="w-6 h-6 text-primary-600" />
+                      </div>
+                      <p className="text-sm font-medium">Demo preview unavailable</p>
+                      <p className="text-xs text-slate-400">
+                        The converter still works fully offline in your browser.
+                      </p>
+                    </div>
+                  )}
+                  {showDemoMedia && (
+                    <div
+                      className={`pointer-events-none absolute inset-0 bg-gradient-to-r from-slate-100 via-white to-slate-100 opacity-60 transition-opacity duration-700 ${
+                        demoLoaded ? 'opacity-0' : 'animate-pulse'
+                      }`}
+                    />
+                  )}
+                  {showDemoMedia && !demoPlaying && (
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-slate-700 shadow-lg">
+                        <Play className="w-4 h-4 text-primary-600" />
+                        Play demo
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <p className="mt-4 text-sm text-slate-600 text-center">
+                  Drop your .olm, wait a few seconds, download your contacts.
+                </p>
+              </section>
             </div>
           )}
 
