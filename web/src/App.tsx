@@ -408,7 +408,7 @@ function App() {
                           htmlFor="scan-sent"
                           className="text-sm font-medium text-slate-600 hover:text-slate-800 transition-colors cursor-pointer inline-flex items-center gap-2"
                         >
-                          Also scan sent messages
+                          Also scan Sent Mail (optional)
                           <span className="group/tooltip relative inline-flex">
                             <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
                             <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
