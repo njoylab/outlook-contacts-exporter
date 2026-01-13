@@ -27,6 +27,7 @@ npm install
 npm run dev
 ```
 Open `http://localhost:5173/` and upload a `.olm` file.
+See `web/README.md` for web-specific notes.
 
 ## Export an OLM File (Outlook for Mac)
 1. Open Outlook and select your mailbox.
