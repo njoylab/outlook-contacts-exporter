@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Upload, Download, FileText, Users, Mail, Check, Info, ShieldCheck, BookOpen } from 'lucide-react';
 
 type AppState = 'idle' | 'processing' | 'complete';
@@ -19,6 +19,35 @@ function App() {
   const [result, setResult] = useState<ProcessingResult | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string>('');
+  const [obfuscateResults, setObfuscateResults] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const obfuscateName = (name: string) => {
+    if (!name) return '';
+    const parts = name.trim().split(/\s+/);
+    return parts
+      .map((part) => {
+        if (part.length <= 1) return '*';
+        return `${part[0]}${'*'.repeat(Math.max(1, part.length - 1))}`;
+      })
+      .join(' ');
+  };
+
+  const obfuscateEmail = (email: string) => {
+    if (!email || !email.includes('@')) return email;
+    const [local, domain] = email.split('@');
+    const localMasked =
+      local.length <= 2 ? `${local[0] ?? ''}*` : `${local[0]}${'*'.repeat(local.length - 2)}${local[local.length - 1]}`;
+    const domainParts = domain.split('.');
+    if (domainParts.length < 2) return `${localMasked}@${domain}`;
+    const tld = domainParts.pop() ?? '';
+    const host = domainParts.join('.');
+    const hostMasked = host.length <= 1 ? '*' : `${host[0]}${'*'.repeat(Math.max(1, host.length - 1))}`;
+    return `${localMasked}@${hostMasked}.${tld}`;
+  };
+
+  const displayName = (name: string) => (obfuscateResults ? obfuscateName(name) : name);
+  const displayEmail = (email: string) => (obfuscateResults ? obfuscateEmail(email) : email);
 
   const handleFile = async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.olm')) {
@@ -152,6 +181,11 @@ function App() {
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
+                onClick={(event) => {
+                  if (event.target === event.currentTarget) {
+                    fileInputRef.current?.click();
+                  }
+                }}
                 className={`
                   relative bg-white/80 backdrop-blur-sm rounded-3xl p-12
                   border-3 border-dashed transition-all duration-300 shadow-lg
@@ -162,10 +196,11 @@ function App() {
                 `}
               >
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept=".olm"
                   onChange={handleFileInput}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  className="sr-only"
                   id="file-upload"
                 />
 
@@ -178,7 +213,13 @@ function App() {
                     Drop your .olm file here
                   </h3>
                   <p className="text-slate-600 mb-6">
-                    or <label htmlFor="file-upload" className="text-primary-600 font-semibold cursor-pointer hover:text-primary-700 transition-colors">browse files</label>
+                    or{' '}
+                    <label
+                      htmlFor="file-upload"
+                      className="text-primary-600 font-semibold cursor-pointer hover:text-primary-700 transition-colors"
+                    >
+                      browse files
+                    </label>
                   </p>
                   <p className="text-sm text-slate-500 mb-6">
                     Having issues? Please{' '}
@@ -197,6 +238,7 @@ function App() {
                         type="checkbox"
                         checked={extractFromPreview}
                         onChange={(e) => setExtractFromPreview(e.target.checked)}
+                        onClick={(event) => event.stopPropagation()}
                         className="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 focus:ring-offset-2 cursor-pointer"
                       />
                       <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 transition-colors">
@@ -209,6 +251,18 @@ function App() {
                           <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900" />
                         </div>
                       </div>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={obfuscateResults}
+                        onChange={(e) => setObfuscateResults(e.target.checked)}
+                        onClick={(event) => event.stopPropagation()}
+                        className="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 focus:ring-offset-2 cursor-pointer"
+                      />
+                      <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 transition-colors">
+                        Obfuscate results in UI
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -316,8 +370,10 @@ function App() {
                           {index + 1}
                         </div>
                         <div>
-                          <p className="font-semibold text-slate-900">{contact.name || contact.email}</p>
-                          <p className="text-sm text-slate-500">{contact.email}</p>
+                          <p className="font-semibold text-slate-900">
+                            {displayName(contact.name) || displayEmail(contact.email)}
+                          </p>
+                          <p className="text-sm text-slate-500">{displayEmail(contact.email)}</p>
                         </div>
                       </div>
                       <div className="px-4 py-2 bg-white rounded-lg shadow-sm">
