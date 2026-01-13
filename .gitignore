@@ -1,0 +1,25 @@
+.DS_Store
+*.log
+
+# Node
+node_modules/
+web/node_modules/
+
+# Builds
+web/dist/
+web/.vite/
+
+# Outputs
+output/
+test-output/
+
+# Local data
+*.olm
+
+# Env
+.env
+.env.*
+
+# Editors
+.vscode/
+.idea/

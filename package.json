@@ -1,0 +1,22 @@
+{
+  "name": "olm-contacts-extractor",
+  "version": "1.0.0",
+  "description": "Extract contacts from Outlook OLM backup files",
+  "type": "module",
+  "scripts": {
+    "extract": "tsx extract-contacts.ts"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "jszip": "^3.10.1",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/jszip": "^3.4.0",
+    "@types/node": "^20.0.0",
+    "@types/xml2js": "^0.4.14",
+    "tsx": "^4.7.0",
+    "typescript": "^5.0.0"
+  }
+}

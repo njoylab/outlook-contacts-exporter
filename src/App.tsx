@@ -1,0 +1,358 @@
+import { useState } from 'react';
+import { Upload, Download, FileText, Users, Mail, Check, Info } from 'lucide-react';
+
+type AppState = 'idle' | 'processing' | 'complete';
+
+interface ProcessingResult {
+  totalContacts: number;
+  frequentContacts: number;
+  csvData: string;
+  vcardData: string;
+  topContacts: Array<{ email: string; name: string; count: number }>;
+}
+
+function App() {
+  const [state, setState] = useState<AppState>('idle');
+  const [extractFromPreview, setExtractFromPreview] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [result, setResult] = useState<ProcessingResult | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [fileName, setFileName] = useState<string>('');
+
+  const handleFile = async (file: File) => {
+    if (!file.name.toLowerCase().endsWith('.olm')) {
+      alert('Please upload a .olm file');
+      return;
+    }
+
+    setFileName(file.name);
+    setState('processing');
+    setProgress(0);
+
+    // Simulate processing (in reality, this would use a Web Worker)
+    // The user will implement the actual worker logic
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 95) {
+          clearInterval(interval);
+          return 95;
+        }
+        return prev + 5;
+      });
+    }, 200);
+
+    // Simulate completion after 4 seconds
+    setTimeout(() => {
+      clearInterval(interval);
+      setProgress(100);
+
+      // Mock result data
+      setResult({
+        totalContacts: 781,
+        frequentContacts: 329,
+        csvData: 'Email,Name,Source,Message Count\ntest@example.com,Test User,from,10',
+        vcardData: 'BEGIN:VCARD\nVERSION:3.0\nEND:VCARD',
+        topContacts: [
+          { email: 'john@example.com', name: 'John Doe', count: 150 },
+          { email: 'jane@example.com', name: 'Jane Smith', count: 120 },
+          { email: 'bob@example.com', name: 'Bob Johnson', count: 95 },
+        ],
+      });
+
+      setTimeout(() => {
+        setState('complete');
+      }, 300);
+    }, 4000);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      handleFile(files[0]);
+    }
+  };
+
+  const downloadFile = (content: string, filename: string, type: string) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const reset = () => {
+    setState('idle');
+    setProgress(0);
+    setResult(null);
+    setFileName('');
+  };
+
+  return (
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 dot-pattern opacity-40" />
+
+      {/* Gradient Orbs */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200 rounded-full filter blur-[128px] opacity-30 animate-float" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
+
+      <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
+        {/* Header */}
+        <header className="text-center mb-16 animate-slide-up">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="p-3 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl shadow-lg shadow-primary-500/30">
+              <Mail className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-6xl font-display font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
+              OLM Contact Extractor
+            </h1>
+          </div>
+
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Extract contacts from Outlook Mac backup files (.olm) directly in your browser.
+            <span className="block mt-2 text-sm text-slate-500 font-medium">
+              🔒 100% client-side processing – your data never leaves your device
+            </span>
+          </p>
+        </header>
+
+        {/* Main Content */}
+        <div className="space-y-8">
+          {/* Upload Section */}
+          {state === 'idle' && (
+            <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <div
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                className={`
+                  relative bg-white/80 backdrop-blur-sm rounded-3xl p-12
+                  border-3 border-dashed transition-all duration-300 shadow-lg
+                  ${isDragging
+                    ? 'border-primary-500 bg-primary-50/50 scale-[1.02]'
+                    : 'border-slate-300 hover:border-slate-400'
+                  }
+                `}
+              >
+                <input
+                  type="file"
+                  accept=".olm"
+                  onChange={handleFileInput}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  id="file-upload"
+                />
+
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl mb-6">
+                    <Upload className="w-10 h-10 text-primary-600" />
+                  </div>
+
+                  <h3 className="text-2xl font-bold text-slate-900 mb-3">
+                    Drop your .olm file here
+                  </h3>
+                  <p className="text-slate-600 mb-6">
+                    or <label htmlFor="file-upload" className="text-primary-600 font-semibold cursor-pointer hover:text-primary-700 transition-colors">browse files</label>
+                  </p>
+
+                  <div className="flex items-center gap-6 justify-center pt-6 border-t border-slate-200">
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={extractFromPreview}
+                        onChange={(e) => setExtractFromPreview(e.target.checked)}
+                        className="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 focus:ring-offset-2 cursor-pointer"
+                      />
+                      <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 transition-colors">
+                        Extract from preview
+                      </span>
+                      <div className="group/tooltip relative">
+                        <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
+                          Extract additional recipients from sent messages
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900" />
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Processing Section */}
+          {state === 'processing' && (
+            <div className="animate-fade-in">
+              <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-12 shadow-xl">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mb-4 animate-pulse">
+                    <FileText className="w-8 h-8 text-primary-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                    Processing {fileName}
+                  </h3>
+                  <p className="text-slate-600">
+                    Extracting contacts from your backup file...
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-sm font-mono font-semibold">
+                    <span className="text-slate-600">Progress</span>
+                    <span className="text-primary-600">{progress}%</span>
+                  </div>
+
+                  <div className="relative h-3 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full transition-all duration-300 ease-out"
+                      style={{ width: `${progress}%` }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+
+                {extractFromPreview && (
+                  <div className="mt-6 p-4 bg-primary-50 rounded-xl border border-primary-200">
+                    <p className="text-sm text-primary-800 flex items-center gap-2">
+                      <Check className="w-4 h-4" />
+                      <span className="font-medium">Preview extraction enabled</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Results Section */}
+          {state === 'complete' && result && (
+            <div className="space-y-6 animate-slide-up">
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-white to-primary-50/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-primary-100">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-primary-100 rounded-lg">
+                      <Users className="w-5 h-5 text-primary-600" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Total Contacts</span>
+                  </div>
+                  <p className="text-4xl font-bold font-mono text-slate-900">{result.totalContacts}</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-white to-coral-50/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-coral-100">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-coral-100 rounded-lg">
+                      <Mail className="w-5 h-5 text-coral-600" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Frequent (3+)</span>
+                  </div>
+                  <p className="text-4xl font-bold font-mono text-slate-900">{result.frequentContacts}</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-white to-emerald-50/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-emerald-100">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-emerald-100 rounded-lg">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Status</span>
+                  </div>
+                  <p className="text-2xl font-bold text-emerald-600">Complete</p>
+                </div>
+              </div>
+
+              {/* Top Contacts */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
+                <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                  <span className="text-2xl">👥</span>
+                  Top Contacts
+                </h3>
+                <div className="space-y-3">
+                  {result.topContacts.map((contact, index) => (
+                    <div
+                      key={contact.email}
+                      className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white font-bold">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-slate-900">{contact.name || contact.email}</p>
+                          <p className="text-sm text-slate-500 font-mono">{contact.email}</p>
+                        </div>
+                      </div>
+                      <div className="px-4 py-2 bg-white rounded-lg shadow-sm">
+                        <span className="text-sm font-mono font-bold text-slate-600">{contact.count} messages</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Download Buttons */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
+                <h3 className="text-xl font-bold text-slate-900 mb-6">Download Results</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <button
+                    onClick={() => downloadFile(result.csvData, 'contacts.csv', 'text/csv')}
+                    className="group flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    <Download className="w-5 h-5 group-hover:animate-bounce" />
+                    <span>Download CSV</span>
+                  </button>
+
+                  <button
+                    onClick={() => downloadFile(result.vcardData, 'contacts.vcf', 'text/vcard')}
+                    className="group flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-coral-500 to-coral-600 hover:from-coral-600 hover:to-coral-700 text-white font-semibold rounded-xl shadow-lg shadow-coral-500/30 hover:shadow-xl hover:shadow-coral-500/40 transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    <Download className="w-5 h-5 group-hover:animate-bounce" />
+                    <span>Download vCard</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={reset}
+                  className="w-full mt-4 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all duration-300"
+                >
+                  Process Another File
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-16 text-center text-sm text-slate-500">
+          <p>
+            Built with privacy in mind. All processing happens locally in your browser.
+          </p>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+export default App;
