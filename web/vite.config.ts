@@ -17,7 +17,7 @@ export default defineConfig({
     react(),
     prerender({
       staticDir: path.resolve(__dirname, 'dist'),
-      routes: ['/', '/privacy', '/legacy-outlook'],
+      routes: ['/', '/privacy', '/legacy-outlook', '/it', '/it/privacy', '/it/legacy-outlook'],
       renderer: new JSDOMRenderer(),
     }),
   ],

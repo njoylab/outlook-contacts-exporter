@@ -6,4 +6,16 @@
   <url>
     <loc>https://outlook-contacts.echovalue.dev/privacy</loc>
   </url>
+  <url>
+    <loc>https://outlook-contacts.echovalue.dev/legacy-outlook</loc>
+  </url>
+  <url>
+    <loc>https://outlook-contacts.echovalue.dev/it</loc>
+  </url>
+  <url>
+    <loc>https://outlook-contacts.echovalue.dev/it/privacy</loc>
+  </url>
+  <url>
+    <loc>https://outlook-contacts.echovalue.dev/it/legacy-outlook</loc>
+  </url>
 </urlset>
