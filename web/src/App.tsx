@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Upload, Download, FileText, Users, Mail, Check, Info, ShieldCheck, BookOpen, Play } from 'lucide-react';
+import legacyOutlookMenu from './assets/howto/legacy-outlook-menu.png';
+import outlookSyncStatus from './assets/howto/outlook-sync-status.png';
+import outlookToolsExport from './assets/howto/outlook-tools-export.png';
 
 type AppState = 'idle' | 'processing' | 'complete';
 
@@ -15,8 +18,9 @@ interface ProcessingResult {
 function App() {
   const currentPath = window.location.pathname;
   const isPrivacyPage = currentPath === '/privacy';
+  const isLegacyGuidePage = currentPath === '/legacy-outlook';
   const isRootPage = currentPath === '/' || currentPath === '';
-  const isNotFoundPage = !isRootPage && !isPrivacyPage;
+  const isNotFoundPage = !isRootPage && !isPrivacyPage && !isLegacyGuidePage;
   const [state, setState] = useState<AppState>('idle');
   const [extractFromPreview, setExtractFromPreview] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -33,22 +37,26 @@ function App() {
     const baseTitle = 'Outlook Contacts Exporter - OLM to CSV or vCard';
     document.title = isPrivacyPage
       ? `Privacy Policy - ${baseTitle}`
-      : isNotFoundPage
-        ? `Page Not Found - ${baseTitle}`
-        : baseTitle;
+      : isLegacyGuidePage
+        ? `Legacy Outlook Export Guide - ${baseTitle}`
+        : isNotFoundPage
+          ? `Page Not Found - ${baseTitle}`
+          : baseTitle;
 
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) {
       const canonicalUrl = isPrivacyPage
         ? 'https://outlook-contacts.echovalue.dev/privacy'
-        : 'https://outlook-contacts.echovalue.dev/';
+        : isLegacyGuidePage
+          ? 'https://outlook-contacts.echovalue.dev/legacy-outlook'
+          : 'https://outlook-contacts.echovalue.dev/';
       canonical.setAttribute('href', canonicalUrl);
     }
     const robots = document.querySelector('meta[name="robots"]');
     if (robots) {
       robots.setAttribute('content', isNotFoundPage ? 'noindex,follow' : 'index,follow');
     }
-  }, [isPrivacyPage, isNotFoundPage]);
+  }, [isPrivacyPage, isLegacyGuidePage, isNotFoundPage]);
 
   const obfuscateName = (name: string) => {
     if (!name) return '';
@@ -253,6 +261,161 @@ function App() {
           >
             Back to the app
           </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLegacyGuidePage) {
+    return (
+      <div className="min-h-screen relative overflow-hidden">
+        <div className="absolute inset-0 dot-pattern opacity-40" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200 rounded-full filter blur-[128px] opacity-30 animate-float" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
+
+        <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
+          <a
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          >
+            Back to home
+          </a>
+
+          <section className="mt-8 bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
+            <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+              <span className="p-2 bg-slate-100 rounded-lg">
+                <BookOpen className="w-5 h-5 text-slate-700" />
+              </span>
+              Step-by-step: Outlook mailbox export on macOS (Legacy Outlook)
+            </h3>
+            <p className="text-sm text-slate-600">
+              Using Legacy Outlook? If you already see the legacy interface, skip to step 2.
+            </p>
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+              This tool reads .olm exports from Outlook for Mac. Windows exports (.pst) are not supported yet.
+            </div>
+
+            <div className="mt-6 space-y-6 text-slate-600">
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                    1
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-slate-900">Switch from New Outlook to Legacy Outlook</h4>
+                    <ul className="list-disc pl-5">
+                      <li>In the macOS top menu, click Outlook.</li>
+                      <li>Select Legacy Outlook.</li>
+                      <li>Confirm the switch (no data loss will occur).</li>
+                      <li>Outlook will restart in Legacy mode.</li>
+                    </ul>
+                  </div>
+                </div>
+                <img
+                  src={legacyOutlookMenu}
+                  alt="Outlook menu showing Legacy Outlook option"
+                  className="mt-4 w-full rounded-xl border border-slate-200"
+                />
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                    2
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-slate-900">Wait for full mailbox synchronization</h4>
+                    <p>
+                      Keep Outlook open for 30–60 minutes (or longer for large mailboxes). The time depends on mailbox
+                      size, email history, and internet speed.
+                    </p>
+                    <div>
+                      <p className="font-semibold text-slate-800">How to verify synchronization</p>
+                      <ul className="list-disc pl-5">
+                        <li>In the bottom sidebar, Outlook should display “All folders are up to date”.</li>
+                        <li>Open Inbox or Sent Items, sort oldest to newest, and scroll to confirm older emails.</li>
+                      </ul>
+                      <p className="mt-2 text-sm text-slate-500">Do not proceed until synchronization is complete.</p>
+                    </div>
+                  </div>
+                </div>
+                <img
+                  src={outlookSyncStatus}
+                  alt="Outlook status bar showing All folders are up to date"
+                  className="mt-4 w-full rounded-xl border border-slate-200"
+                />
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                    3
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-slate-900">Export the mailbox</h4>
+                    <ol className="list-decimal pl-5">
+                      <li>In the left sidebar, click your account mailbox.</li>
+                      <li>In the menu bar, click Tools.</li>
+                      <li>Select Export.</li>
+                      <li>Choose the items to export.</li>
+                      <li>Click Continue.</li>
+                      <li>Choose a destination folder for the export.</li>
+                    </ol>
+                    <p>Outlook will create an archive file in .olm format.</p>
+                  </div>
+                </div>
+                <img
+                  src={outlookToolsExport}
+                  alt="Outlook Tools menu showing Export option"
+                  className="mt-4 w-full rounded-xl border border-slate-200"
+                />
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                    4
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-slate-900">Export file ready</h4>
+                    <p>Your Outlook for Mac archive (.olm) file is now ready and can be used for:</p>
+                    <ul className="list-disc pl-5">
+                      <li>Email backup</li>
+                      <li>Contact extraction</li>
+                      <li>Migration to another system</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                    5
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-slate-900">(Optional) Import the mailbox into Outlook</h4>
+                    <ol className="list-decimal pl-5">
+                      <li>Open Outlook (Legacy).</li>
+                      <li>In the menu bar, click Tools.</li>
+                      <li>Select Import.</li>
+                      <li>Choose the previously exported .olm file.</li>
+                      <li>Complete the import.</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-center">
+              <a
+                href="/"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-colors"
+              >
+                Back to home
+              </a>
+            </div>
+          </section>
         </div>
       </div>
     );
@@ -674,6 +837,15 @@ function App() {
             <li>4. Select what to export (Mail/Contacts/Calendar) and click Continue.</li>
             <li>5. Save the .olm file to your computer, then upload it here.</li>
           </ol>
+          <p className="mt-4 text-sm text-slate-600">
+            Having trouble? Use Legacy Outlook.{' '}
+            <a
+              href="/legacy-outlook"
+              className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+            >
+              View the Legacy Outlook export guide.
+            </a>
+          </p>
         </section>
 
         <section className="mt-16 bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
