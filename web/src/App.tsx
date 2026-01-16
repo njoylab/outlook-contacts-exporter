@@ -17,8 +17,9 @@ interface ProcessingResult {
 
 function App() {
   const currentPath = window.location.pathname;
-  const isItalianPath = currentPath === '/it' || currentPath.startsWith('/it/');
-  const normalizedPath = isItalianPath ? currentPath.replace(/^\/it/, '') || '/' : currentPath;
+  const trimmedPath = currentPath !== '/' ? currentPath.replace(/\/+$/, '') : currentPath;
+  const isItalianPath = trimmedPath === '/it' || trimmedPath.startsWith('/it/');
+  const normalizedPath = isItalianPath ? trimmedPath.replace(/^\/it/, '') || '/' : trimmedPath;
   const isPrivacyPage = normalizedPath === '/privacy';
   const isLegacyGuidePage = normalizedPath === '/legacy-outlook';
   const isRootPage = normalizedPath === '/' || normalizedPath === '';
