@@ -59,10 +59,10 @@ function App() {
       ? 'Outlook Contacts Exporter - OLM a CSV o vCard'
       : 'Outlook Contacts Exporter - OLM to CSV or vCard';
     const privacyTitle = isItalianPath ? 'Informativa sulla privacy' : 'Privacy Policy';
-    const legacyTitle = isItalianPath ? 'Guida export Legacy Outlook' : 'Legacy Outlook Export Guide';
+    const legacyTitle = isItalianPath ? "Guida all'esportazione Legacy Outlook" : 'Legacy Outlook Export Guide';
     const notFoundTitle = isItalianPath ? 'Pagina non trovata' : 'Page Not Found';
     const description = isItalianPath
-      ? 'Estrai contatti da backup .olm di Outlook per Mac direttamente nel browser. Esporta CSV o vCard con elaborazione locale e privata.'
+      ? 'Estrai i contatti dai backup .olm di Outlook per Mac direttamente nel browser. Esporta CSV o vCard con elaborazione locale e privata.'
       : 'Extract contacts from Outlook for Mac .olm backups directly in your browser. Export CSV or vCard with fully local, private processing.';
 
     const pageTitle = isPrivacyPage
@@ -153,7 +153,7 @@ function App() {
 
   const handleFile = async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.olm')) {
-      alert(t('Please upload a .olm file', 'Carica un file .olm'));
+      alert(t('Please upload a .olm file', 'Carica un file .olm.'));
       return;
     }
 
@@ -281,24 +281,30 @@ function App() {
               </h1>
             </div>
             <p className="text-lg text-slate-600">
-              {t('We built this tool to keep your data on your device.', 'Abbiamo creato questo strumento per tenere i tuoi dati sul tuo dispositivo.')}
+              {t(
+                'We built this tool to keep your data on your device.',
+                'Abbiamo creato questo strumento per lasciare i tuoi dati sul tuo dispositivo.'
+              )}
             </p>
           </header>
 
           <section className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl space-y-6 text-slate-600">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900 mb-2">{t('Local Processing Only', 'Elaborazione solo locale')}</h2>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">{t('Local Processing Only', 'Solo elaborazione locale')}</h2>
               <p>
                 {t(
                   'Your .olm file is processed entirely in your browser. No files are uploaded, stored, or transmitted to any server.',
-                  'Il tuo file .olm viene elaborato interamente nel browser. Nessun file viene caricato, salvato o trasmesso a server.'
+                  'Il tuo file .olm viene elaborato interamente nel browser. Nessun file viene caricato, salvato o trasmesso a un server.'
                 )}
               </p>
             </div>
             <div>
               <h2 className="text-lg font-semibold text-slate-900 mb-2">{t('No Accounts or Tracking', 'Nessun account o tracciamento')}</h2>
               <p>
-                {t('This app does not require an account and does not use analytics or trackers.', "Questa app non richiede un account e non usa analytics o tracker.")}
+                {t(
+                  'This app does not require an account and does not use analytics or trackers.',
+                  'Questa app non richiede account e non usa analytics o tracker.'
+                )}
               </p>
             </div>
             <div>
@@ -310,7 +316,10 @@ function App() {
             <div>
               <h2 className="text-lg font-semibold text-slate-900 mb-2">{t('Contact', 'Contatti')}</h2>
               <p>
-                {t('Questions? Open an issue on GitHub and we will respond.', 'Domande? Apri un issue su GitHub e risponderemo.')}
+                {t(
+                  'Questions? Open an issue on GitHub and we will respond.',
+                  'Domande? Apri una segnalazione su GitHub e ti risponderemo.'
+                )}
               </p>
             </div>
           </section>
@@ -359,10 +368,10 @@ function App() {
             {t('Page not found', 'Pagina non trovata')}
           </h1>
           <p className="text-lg text-slate-600 mb-8">
-            {t(
-              'The page you are looking for does not exist. Head back to the app and upload a .olm file.',
-              "La pagina che cerchi non esiste. Torna all'app e carica un file .olm."
-            )}
+              {t(
+                'The page you are looking for does not exist. Head back to the app and upload a .olm file.',
+                "La pagina che cerchi non esiste. Torna all'app e carica un file .olm."
+              )}
           </p>
           <a
             href={withLocale('/')}
@@ -416,19 +425,19 @@ function App() {
               </span>
               {t(
                 'Step-by-step: Outlook mailbox export on macOS (Legacy Outlook)',
-                'Passo per passo: esportazione della casella Outlook su macOS (Legacy Outlook)'
+                'Passo per passo: esportazione della casella di Outlook su macOS (Legacy Outlook)'
               )}
             </h3>
             <p className="text-sm text-slate-600">
               {t(
                 'Using Legacy Outlook? If you already see the legacy interface, skip to step 2.',
-                "Usi Legacy Outlook? Se vedi gia l'interfaccia legacy, passa al punto 2."
+                "Usi Legacy Outlook? Se vedi gia l'interfaccia legacy, vai al punto 2."
               )}
             </p>
             <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
               {t(
                 'This tool reads .olm exports from Outlook for Mac. Windows exports (.pst) are not supported yet.',
-                'Questo strumento legge gli export .olm di Outlook per Mac. Gli export di Windows (.pst) non sono ancora supportati.'
+                'Questo strumento legge le esportazioni .olm di Outlook per Mac. Le esportazioni di Windows (.pst) non sono ancora supportate.'
               )}
             </div>
 
@@ -543,7 +552,7 @@ function App() {
                     <p>
                       {t(
                         'Your Outlook for Mac archive (.olm) file is now ready and can be used for:',
-                        'Il file archivio Outlook per Mac (.olm) e ora pronto e puo essere usato per:'
+                        'Il file archivio Outlook per Mac (.olm) e pronto e puo essere usato per:'
                       )}
                     </p>
                     <ul className="list-disc pl-5">
@@ -626,7 +635,7 @@ function App() {
               <Mail className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
-              {t('Move your Outlook contacts out of .olm in seconds', 'Sposta i contatti di Outlook fuori dal .olm in pochi secondi')}
+              {t('Move your Outlook contacts out of .olm in seconds', 'Esporta i contatti da un file .olm di Outlook in pochi secondi')}
             </h1>
           </div>
 
@@ -684,7 +693,7 @@ function App() {
           {state === 'idle' && (
             <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
               <div className="text-center text-sm font-semibold uppercase tracking-wide text-primary-700 mb-4">
-                {t('Drop your .olm file to convert', 'Trascina il tuo file .olm per convertirlo')}
+                {t('Drop your .olm file to convert', 'Trascina il file .olm per convertirlo')}
               </div>
               <div
                 onDrop={handleDrop}
@@ -736,7 +745,7 @@ function App() {
                       href="https://github.com/njoylab/outlook-contacts-exporter/issues"
                       className="text-primary-600 hover:text-primary-700 transition-colors"
                     >
-                      {t('open an issue on GitHub', 'apri un issue su GitHub')}
+                      {t('open an issue on GitHub', 'apri una segnalazione su GitHub')}
                     </a>
                     .
                   </p>
@@ -764,13 +773,13 @@ function App() {
                           htmlFor="scan-sent"
                           className="text-sm font-medium text-slate-600 hover:text-slate-800 transition-colors cursor-pointer inline-flex items-center gap-2"
                         >
-                          {t('Also scan Sent Mail (optional)', 'Analizza anche Posta inviata (opzionale)')}
+                          {t('Also scan Sent Mail (optional)', 'Scansiona anche Posta inviata (opzionale)')}
                           <span className="group/tooltip relative inline-flex">
                             <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
                             <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
                               {t(
                                 'Find more contacts by extracting recipients from sent messages',
-                                'Trova piu contatti estraendo i destinatari dai messaggi inviati'
+                                'Trova piu contatti estraendo i destinatari dai messaggi inviati.'
                               )}
                               <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900" />
                             </span>
@@ -779,7 +788,7 @@ function App() {
                         <p className="text-xs text-slate-500 mt-1">
                           {t(
                             'This scans sent emails to find additional recipients. Still local-only.',
-                            'Questo analizza le email inviate per trovare destinatari aggiuntivi. Sempre solo in locale.'
+                            'Questa opzione analizza le email inviate per trovare destinatari aggiuntivi. Sempre solo in locale.'
                           )}
                         </p>
                       </div>
@@ -842,7 +851,7 @@ function App() {
                       <p className="text-xs text-slate-400">
                         {t(
                           'The converter still works fully offline in your browser.',
-                          'Il convertitore funziona comunque completamente offline nel tuo browser.'
+                          'Il convertitore funziona comunque offline nel tuo browser.'
                         )}
                       </p>
                     </div>
@@ -858,7 +867,7 @@ function App() {
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                       <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-slate-700 shadow-lg">
                         <Play className="w-4 h-4 text-primary-600" />
-                        {t('Watch a 5s demo', 'Guarda una demo di 5s')}
+                        {t('Watch a 5s demo', 'Guarda una demo da 5s')}
                       </div>
                     </div>
                   )}
@@ -881,9 +890,9 @@ function App() {
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mb-4 animate-pulse">
                     <FileText className="w-8 h-8 text-primary-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                    {t('Processing', 'Elaborazione di')} {fileName}
-                  </h3>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                  {t('Processing', 'Elaborazione di')} {fileName}
+                </h3>
                   <p className="text-slate-600">
                     {t('Extracting contacts from your backup file...', 'Estrazione dei contatti dal file di backup...')}
                   </p>
@@ -988,9 +997,9 @@ function App() {
                         </div>
                       </div>
                       <div className="px-4 py-2 bg-white rounded-lg shadow-sm">
-                        <span className="text-sm font-bold text-slate-600">
-                          {t(`${contact.count} messages`, `${contact.count} messaggi`)}
-                        </span>
+                  <span className="text-sm font-bold text-slate-600">
+                    {t(`${contact.count} messages`, `${contact.count} messaggi`)}
+                  </span>
                       </div>
                     </div>
                   ))}
@@ -1006,7 +1015,7 @@ function App() {
                     className="group flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 hover:scale-[1.02]"
                   >
                     <Download className="w-5 h-5 group-hover:animate-bounce" />
-                    <span>{t('All Contacts CSV', 'CSV tutti i contatti')}</span>
+                    <span>{t('All Contacts CSV', 'CSV di tutti i contatti')}</span>
                   </button>
 
                   <button
@@ -1014,7 +1023,7 @@ function App() {
                     className="group flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-[1.02]"
                   >
                     <Download className="w-5 h-5 group-hover:animate-bounce" />
-                    <span>{t('Frequent CSV', 'CSV frequenti')}</span>
+                    <span>{t('Frequent CSV', 'CSV contatti frequenti')}</span>
                   </button>
 
                   <button
@@ -1047,7 +1056,7 @@ function App() {
           <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
             {t(
               'This tool reads .olm exports from Outlook for Mac. Windows exports (.pst) are not supported yet.',
-              'Questo strumento legge gli export .olm di Outlook per Mac. Gli export di Windows (.pst) non sono ancora supportati.'
+              'Questo strumento legge le esportazioni .olm di Outlook per Mac. Le esportazioni di Windows (.pst) non sono ancora supportate.'
             )}
           </div>
           <ol className="space-y-2 text-slate-600">
