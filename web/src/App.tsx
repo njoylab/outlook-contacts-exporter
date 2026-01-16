@@ -36,6 +36,23 @@ function App() {
   const [demoLoaded, setDemoLoaded] = useState(false);
   const [demoPlaying, setDemoPlaying] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const preferredLocaleRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!preferredLocaleRef.current) {
+      preferredLocaleRef.current = localStorage.getItem('preferredLocale');
+    }
+    if (preferredLocaleRef.current) {
+      return;
+    }
+    if (!isNotFoundPage && !isItalianPath) {
+      const browserLocale = navigator.language || '';
+      if (browserLocale.toLowerCase().startsWith('it')) {
+        const targetPath = `/it${normalizedPath === '/' ? '' : normalizedPath}`;
+        window.location.replace(targetPath);
+      }
+    }
+  }, [isItalianPath, isNotFoundPage, normalizedPath]);
 
   useEffect(() => {
     const baseTitle = isItalianPath
@@ -99,6 +116,13 @@ function App() {
     }
     document.documentElement.lang = isItalianPath ? 'it' : 'en';
   }, [isPrivacyPage, isLegacyGuidePage, isNotFoundPage, isItalianPath]);
+
+  const handleLocaleChange = (locale: 'en' | 'it') => {
+    const targetPrefix = locale === 'it' ? '/it' : '';
+    const targetPath = normalizedPath === '/' ? '' : normalizedPath;
+    localStorage.setItem('preferredLocale', locale);
+    window.location.assign(`${targetPrefix}${targetPath || '/'}`);
+  };
 
   const obfuscateName = (name: string) => {
     if (!name) return '';
@@ -228,6 +252,25 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
         <div className="relative z-10 container mx-auto px-6 py-16 max-w-4xl">
+          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('en')}
+                className={`transition-colors ${!isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                EN
+              </button>
+              <span className="text-slate-300">|</span>
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('it')}
+                className={`transition-colors ${isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                IT
+              </button>
+            </div>
+          </div>
           <header className="text-center mb-12 animate-slide-up">
             <div className="inline-flex items-center gap-3 mb-6">
               <div className="p-3 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl shadow-lg shadow-primary-500/30">
@@ -290,6 +333,25 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
         <div className="relative z-10 container mx-auto px-6 py-20 max-w-3xl text-center">
+          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('en')}
+                className={`transition-colors ${!isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                EN
+              </button>
+              <span className="text-slate-300">|</span>
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('it')}
+                className={`transition-colors ${isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                IT
+              </button>
+            </div>
+          </div>
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl shadow-lg shadow-primary-500/30 mb-6">
             <Mail className="w-10 h-10 text-white" />
           </div>
@@ -321,6 +383,25 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
         <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
+          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('en')}
+                className={`transition-colors ${!isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                EN
+              </button>
+              <span className="text-slate-300">|</span>
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('it')}
+                className={`transition-colors ${isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                IT
+              </button>
+            </div>
+          </div>
           <a
             href={withLocale('/')}
             className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
@@ -518,9 +599,28 @@ function App() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200 rounded-full filter blur-[128px] opacity-30 animate-float" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
-      <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
-        {/* Header */}
-        <header className="text-center mb-10 sm:mb-12 animate-slide-up">
+        <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
+          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('en')}
+                className={`transition-colors ${!isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                EN
+              </button>
+              <span className="text-slate-300">|</span>
+              <button
+                type="button"
+                onClick={() => handleLocaleChange('it')}
+                className={`transition-colors ${isItalianPath ? 'text-slate-900' : 'hover:text-slate-700'}`}
+              >
+                IT
+              </button>
+            </div>
+          </div>
+          {/* Header */}
+          <header className="text-center mb-10 sm:mb-12 animate-slide-up">
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="p-3 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl shadow-lg shadow-primary-500/30">
               <Mail className="w-8 h-8 text-white" />
