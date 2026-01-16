@@ -15,7 +15,8 @@
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "xml2js": "^0.6.2"
+    "xml2js": "^0.6.2",
+    "@prerenderer/renderer-jsdom": "^0.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

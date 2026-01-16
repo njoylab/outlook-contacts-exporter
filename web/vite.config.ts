@@ -8,6 +8,7 @@ type PrerenderOptions = Parameters<typeof import('vite-plugin-prerender').defaul
 
 const require = createRequire(import.meta.url)
 const prerender = require('vite-plugin-prerender') as (options: PrerenderOptions) => Plugin
+const JSDOMRenderer = require('@prerenderer/renderer-jsdom')
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // https://vite.dev/config/
@@ -17,6 +18,7 @@ export default defineConfig({
     prerender({
       staticDir: path.resolve(__dirname, 'dist'),
       routes: ['/', '/privacy', '/legacy-outlook'],
+      renderer: new JSDOMRenderer(),
     }),
   ],
 })
