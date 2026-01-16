@@ -23,5 +23,7 @@ npm run build
 ```
 
 ## Notes
+- Build uses prerendering for `/`, `/privacy`, and `/legacy-outlook` to output static HTML.
+- For Cloudflare Pages, use the `_redirects` fallback `/* /404.html 404` so prerendered routes are served.
 - Windows Outlook exports `.pst`, which is not supported.
 - All processing happens locally on your machine.
