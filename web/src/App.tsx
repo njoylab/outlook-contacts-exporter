@@ -1,8 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { Upload, Download, FileText, Users, Mail, Check, Info, ShieldCheck, BookOpen, Play } from 'lucide-react';
-import legacyOutlookMenu from './assets/howto/legacy-outlook-menu.png';
-import outlookSyncStatus from './assets/howto/outlook-sync-status.png';
-import outlookToolsExport from './assets/howto/outlook-tools-export.png';
 
 type AppState = 'idle' | 'processing' | 'complete';
 
@@ -432,7 +429,7 @@ function App() {
             <p className="text-sm text-slate-600">
               {t(
                 'Using Legacy Outlook? If you already see the legacy interface, skip to step 2.',
-                "Usi Legacy Outlook? Se vedi gia l'interfaccia legacy, vai al punto 2."
+                "Usi Legacy Outlook? Se vedi già l'interfaccia legacy, vai al punto 2."
               )}
             </p>
             <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
@@ -456,15 +453,10 @@ function App() {
                       <li>{t('In the macOS top menu, click Outlook.', 'Nel menu in alto di macOS, clicca Outlook.')}</li>
                       <li>{t('Select Legacy Outlook.', 'Seleziona Legacy Outlook.')}</li>
                       <li>{t('Confirm the switch (no data loss will occur).', 'Conferma il passaggio (nessuna perdita di dati).')}</li>
-                      <li>{t('Outlook will restart in Legacy mode.', 'Outlook si riavviera in modalita Legacy.')}</li>
+                      <li>{t('Outlook will restart in Legacy mode.', 'Outlook si riavvierà in modalità Legacy.')}</li>
                     </ul>
                   </div>
                 </div>
-                <img
-                  src={legacyOutlookMenu}
-                  alt={t('Outlook menu showing Legacy Outlook option', "Menu di Outlook con l'opzione Legacy Outlook")}
-                  className="mt-4 w-full rounded-xl border border-slate-200"
-                />
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -479,7 +471,7 @@ function App() {
                     <p>
                       {t(
                         'Keep Outlook open for 30-60 minutes (or longer for large mailboxes). The time depends on mailbox size, email history, and internet speed.',
-                        'Tieni Outlook aperto per 30-60 minuti (o piu a lungo per caselle grandi). Il tempo dipende dalla dimensione della casella, dallo storico delle email e dalla velocita di Internet.'
+                        'Tieni Outlook aperto per 30-60 minuti (o più a lungo per caselle grandi). Il tempo dipende dalla dimensione della casella, dallo storico delle email e dalla velocità di Internet.'
                       )}
                     </p>
                     <div>
@@ -490,30 +482,22 @@ function App() {
                         <li>
                           {t(
                             'In the bottom sidebar, Outlook should display "All folders are up to date".',
-                            'Nella barra in basso, Outlook dovrebbe mostrare "All folders are up to date".'
+                            'Nella barra in basso, Outlook dovrebbe mostrare "Tutte le cartelle sono aggiornate".'
                           )}
                         </li>
                         <li>
                           {t(
                             'Open Inbox or Sent Items, sort oldest to newest, and scroll to confirm older emails.',
-                            'Apri Posta in arrivo o Posta inviata, ordina dal piu vecchio al piu recente e scorri per vedere le email piu vecchie.'
+                            'Apri Posta in arrivo o Posta inviata, ordina dal più vecchio al più recente e scorri per vedere le email più vecchie.'
                           )}
                         </li>
                       </ul>
                       <p className="mt-2 text-sm text-slate-500">
-                        {t('Do not proceed until synchronization is complete.', 'Non procedere finche la sincronizzazione non e completa.')}
+                        {t('Do not proceed until synchronization is complete.', 'Non procedere finché la sincronizzazione non è completa.')}
                       </p>
                     </div>
                   </div>
                 </div>
-                <img
-                  src={outlookSyncStatus}
-                  alt={t(
-                    'Outlook status bar showing All folders are up to date',
-                    'Barra di stato di Outlook con "All folders are up to date"'
-                  )}
-                  className="mt-4 w-full rounded-xl border border-slate-200"
-                />
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -532,15 +516,10 @@ function App() {
                       <li>{t('Choose a destination folder for the export.', "Scegli una cartella di destinazione per l'esportazione.")}</li>
                     </ol>
                     <p>
-                      {t('Outlook will create an archive file in .olm format.', 'Outlook creera un archivio in formato .olm.')}
+                      {t('Outlook will create an archive file in .olm format.', 'Outlook creerà un archivio in formato .olm.')}
                     </p>
                   </div>
                 </div>
-                <img
-                  src={outlookToolsExport}
-                  alt={t('Outlook Tools menu showing Export option', 'Menu Strumenti di Outlook con opzione Esporta')}
-                  className="mt-4 w-full rounded-xl border border-slate-200"
-                />
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -553,12 +532,12 @@ function App() {
                     <p>
                       {t(
                         'Your Outlook for Mac archive (.olm) file is now ready and can be used for:',
-                        'Il file archivio Outlook per Mac (.olm) e pronto e puo essere usato per:'
+                        'Il file di archivio Outlook per Mac (.olm) è pronto e può essere usato per:'
                       )}
                     </p>
                     <ul className="list-disc pl-5">
-                      <li>{t('Email backup', 'Backup email')}</li>
-                      <li>{t('Contact extraction', 'Estrazione contatti')}</li>
+                      <li>{t('Email backup', 'Backup delle email')}</li>
+                      <li>{t('Contact extraction', 'Estrazione dei contatti')}</li>
                       <li>{t('Migration to another system', 'Migrazione verso un altro sistema')}</li>
                     </ul>
                   </div>
@@ -655,7 +634,7 @@ function App() {
             {[
               { label: t('Runs entirely in your browser', 'Funziona interamente nel tuo browser') },
               { label: t('Your file never leaves your device', 'Il file non lascia mai il tuo dispositivo') },
-              { label: t('Open-source on GitHub', 'Open-source su GitHub'), href: 'https://github.com/njoylab/outlook-contacts-exporter' },
+              { label: t('Open-source on GitHub', 'Open source su GitHub'), href: 'https://github.com/njoylab/outlook-contacts-exporter' },
               { label: t('No accounts or tracking', 'Nessun account o tracciamento'), className: 'hidden sm:flex' },
               { label: t('Works offline after load', 'Funziona offline dopo il caricamento'), className: 'hidden sm:flex' },
             ].map((item) => (
@@ -780,7 +759,7 @@ function App() {
                             <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
                               {t(
                                 'Find more contacts by extracting recipients from sent messages',
-                                'Trova piu contatti estraendo i destinatari dai messaggi inviati.'
+                                'Trova più contatti estraendo i destinatari dai messaggi inviati.'
                               )}
                               <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900" />
                             </span>
@@ -868,7 +847,7 @@ function App() {
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                       <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-slate-700 shadow-lg">
                         <Play className="w-4 h-4 text-primary-600" />
-                        {t('Watch a 5s demo', 'Guarda una demo da 5s')}
+                        {t('Watch a 5s demo', 'Guarda una demo di 5 secondi')}
                       </div>
                     </div>
                   )}
