@@ -21,8 +21,6 @@ test-output/
 .env.*
 
 # Assistant instructions
-AGENTS.md
-CLAUDE.md
 .claude/
 
 # Editors
