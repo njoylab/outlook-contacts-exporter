@@ -250,7 +250,13 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
         <div className="relative z-10 container mx-auto px-6 py-16 max-w-4xl">
-          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 text-sm font-semibold text-slate-500 mb-6">
+            <a
+              href={withLocale('/legacy-outlook/')}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-full border border-primary-200 hover:bg-primary-100 transition-colors w-fit"
+            >
+              {t('How to export', 'Come esportare')}
+            </a>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
               <button
                 type="button"
@@ -340,7 +346,13 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
         <div className="relative z-10 container mx-auto px-6 py-20 max-w-3xl text-center">
-          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 text-sm font-semibold text-slate-500 mb-6">
+            <a
+              href={withLocale('/legacy-outlook/')}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-full border border-primary-200 hover:bg-primary-100 transition-colors w-fit"
+            >
+              {t('How to export', 'Come esportare')}
+            </a>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
               <button
                 type="button"
@@ -390,7 +402,13 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
         <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
-          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 text-sm font-semibold text-slate-500 mb-6">
+            <a
+              href={withLocale('/legacy-outlook/')}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-full border border-primary-200 hover:bg-primary-100 transition-colors w-fit"
+            >
+              {t('How to export', 'Come esportare')}
+            </a>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
               <button
                 type="button"
@@ -589,7 +607,13 @@ function App() {
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-coral-400 rounded-full filter blur-[128px] opacity-20" style={{ animationDelay: '3s' }} />
 
         <div className="relative z-10 container mx-auto px-6 py-16 max-w-5xl">
-          <div className="flex justify-end text-sm font-semibold text-slate-500 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 text-sm font-semibold text-slate-500 mb-6">
+            <a
+              href={withLocale('/legacy-outlook/')}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-full border border-primary-200 hover:bg-primary-100 transition-colors w-fit"
+            >
+              {t('How to export', 'Come esportare')}
+            </a>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 border border-slate-200">
               <button
                 type="button"
@@ -629,15 +653,6 @@ function App() {
               {t('No uploads. No tracking. Just local processing.', 'Nessun upload. Nessun tracciamento. Solo elaborazione locale.')}
             </span>
           </p>
-
-          <div className="mt-6 flex justify-center">
-            <a
-              href={withLocale('/legacy-outlook/')}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-50 text-primary-700 font-semibold rounded-xl border border-primary-200 hover:bg-primary-100 transition-colors"
-            >
-              {t('How to export', 'How to export')}
-            </a>
-          </div>
 
           <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-sm text-slate-600">
             {[

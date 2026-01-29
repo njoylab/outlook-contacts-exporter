@@ -261,10 +261,11 @@ self.onmessage = async (e: MessageEvent) => {
         })),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error occurred';
     self.postMessage({
       type: 'error',
-      error: error.message || 'Unknown error occurred',
+      error: message,
     });
   }
 };
