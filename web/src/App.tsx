@@ -630,6 +630,15 @@ function App() {
             </span>
           </p>
 
+          <div className="mt-6 flex justify-center">
+            <a
+              href={withLocale('/legacy-outlook/')}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-50 text-primary-700 font-semibold rounded-xl border border-primary-200 hover:bg-primary-100 transition-colors"
+            >
+              {t('How to export', 'How to export')}
+            </a>
+          </div>
+
           <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-sm text-slate-600">
             {[
               { label: t('Runs entirely in your browser', 'Funziona interamente nel tuo browser') },
